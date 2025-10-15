@@ -1,28 +1,108 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.EventListener;
+
+import static java.lang.System.exit;
 
 public class TicTacToeFrame extends JFrame {
-    JFrame frame;
     JPanel mainPanel;
 
     JPanel titlePanel;
     JPanel contentPanel;
     JPanel buttonPanel;
 
+    JLabel titleLabel;
+
+    int row = -1;
+    int col = -1;
+    TicTacToeTile[][] board = new TicTacToeTile[3][3];
+    int moveCount = 0;
+
     JButton newGameBtn;
     JButton quitBtn;
 
+    int resetConfirm;
+
     public TicTacToeFrame()
     {
-        frame = new JFrame("TicTacToe");
         mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
+        createTitlePanel();
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
 
         createContentPanel();
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
 
+        createButtonPanel();
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        add(mainPanel);
+        setSize(400,400);
+        setVisible(true);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void createContentPanel(){}
 
-    private void createButtonPanel(){}
+    private void  createTitlePanel()
+    {
+        titlePanel = new JPanel();
+        titleLabel = new JLabel("TicTacToe Game!", JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        titlePanel.add(titleLabel);
+    }
+
+    private void createContentPanel(){
+        contentPanel = new JPanel();
+
+        int gap = 5;
+        contentPanel.setLayout(new GridLayout(3,3, gap, gap));
+
+        contentPanel.setBackground(Color.black);
+
+        for (int row = 0; row < 3; row++){
+            for (int col = 0; col < 3; col++){
+                board[row][col] = new TicTacToeTile(row, col);
+                contentPanel.add(board[row][col]);
+            }
+        }
+
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
+    }
+
+    private void resetGame(){
+        resetConfirm = JOptionPane.showConfirmDialog(
+                null,
+                "Do you want to reset the game",
+                "Confirmation",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (resetConfirm == JOptionPane.YES_OPTION){
+            //reset code here
+        }else{}
+    }
+
+    private void createButtonPanel(){
+        buttonPanel = new JPanel();
+
+        newGameBtn = new JButton("New Game");
+        newGameBtn.setFont(new Font("Arial", Font.BOLD, 20));
+        newGameBtn.setBackground(Color.black);
+        newGameBtn.setForeground(Color.white);
+        newGameBtn.addActionListener((ActionEvent e) -> {
+            resetGame();
+        });
+
+        quitBtn = new JButton("Quit");
+        quitBtn.setFont(new Font("Arial", Font.BOLD, 20));
+        quitBtn.setBackground(Color.black);
+        quitBtn.setForeground(Color.white);
+        quitBtn.addActionListener((ActionEvent ae) -> exit(0));
+
+        buttonPanel.add(newGameBtn);
+        buttonPanel.add(quitBtn);
+    }
 }
