@@ -12,6 +12,8 @@ public class TicTacToeFrame extends JFrame {
     JPanel contentPanel;
     JPanel buttonPanel;
 
+    private TicTacToe gameEngine;
+
     JLabel titleLabel;
 
     int row = -1;
@@ -26,6 +28,8 @@ public class TicTacToeFrame extends JFrame {
 
     public TicTacToeFrame()
     {
+        gameEngine = new TicTacToe();
+
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
@@ -64,12 +68,41 @@ public class TicTacToeFrame extends JFrame {
 
         for (int row = 0; row < 3; row++){
             for (int col = 0; col < 3; col++){
-                board[row][col] = new TicTacToeTile(row, col);
-                contentPanel.add(board[row][col]);
+                TicTacToeTile tile = new TicTacToeTile(row, col);
+                board[row][col] = tile;
+
+                tile.addActionListener(e -> {
+                    handleTileClick(tile.getRow(), tile.getCol());
+                });
+
+                contentPanel.add(tile);
             }
         }
 
         mainPanel.add(contentPanel, BorderLayout.CENTER);
+    }
+
+    private void handleTileClick(int row, int col)
+    {
+        TicTacToeTile clickedTile = board[row][col];
+
+        boolean moveSuccessful = gameEngine.makeMove(row, col);
+
+        if(moveSuccessful){
+            String player = gameEngine.getCurrentPlayer();
+            clickedTile.setState(player.charAt(0));
+
+            if (gameEngine.isWin(player)){
+                titleLabel.setText("Congratulations! Player " +player+ " win!");
+            } else if (gameEngine.isTie()) {
+                titleLabel.setText("It's a tie!");
+            } else {
+                gameEngine.switchPlayer(player);
+                titleLabel.setText("Player " +player+ "'s turn!");
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Please choose another tile");
+        }
     }
 
     private void resetGame(){

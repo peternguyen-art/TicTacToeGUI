@@ -64,7 +64,7 @@ public class TicTacToe
         return board[row][col];
     }
 
-    private boolean isValidMove(int row, int col)
+    public boolean isValidMove(int row, int col)
     {
         boolean retVal = false;
         if(board[row][col].equals(" "))
@@ -89,7 +89,7 @@ public class TicTacToe
 //
 //    }
 
-    private boolean isWin(String player)
+    public boolean isWin(String player)
     {
         return isColWin(player) || isRowWin(player) || isDiagnalWin(player);
     }
@@ -108,7 +108,8 @@ public class TicTacToe
         }
         return false; // no col win
     }
-    private boolean isRowWin(String player)
+
+    public boolean isRowWin(String player)
     {
        // checks for a row win for the specified player
         for(int row=0; row < ROW; row++)
@@ -122,7 +123,8 @@ public class TicTacToe
         }
         return false; // no row win        
     }
-    private boolean isDiagnalWin(String player)
+
+    public boolean isDiagnalWin(String player)
     {
        // checks for a diagonal win for the specified player
         
@@ -143,7 +145,7 @@ public class TicTacToe
     
     // checks for a tie before board is filled.
     // check for the win first to be efficient
-    private boolean isTie()
+    public boolean isTie()
     {
         boolean xFlag = false;
         boolean oFlag = false;
