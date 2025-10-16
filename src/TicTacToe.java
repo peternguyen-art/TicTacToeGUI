@@ -24,7 +24,7 @@ public class TicTacToe
     }
 
     
-    private void clearBoard()
+    public void clearBoard()
     {
        // sets all the board elements to a space
        for(int row=0; row < ROW; row++)

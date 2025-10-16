@@ -16,10 +16,7 @@ public class TicTacToeFrame extends JFrame {
 
     JLabel titleLabel;
 
-    int row = -1;
-    int col = -1;
     TicTacToeTile[][] board = new TicTacToeTile[3][3];
-    int moveCount = 0;
 
     JButton newGameBtn;
     JButton quitBtn;
@@ -58,7 +55,7 @@ public class TicTacToeFrame extends JFrame {
         titlePanel.add(titleLabel);
     }
 
-    private void createContentPanel(){
+    public void createContentPanel(){
         contentPanel = new JPanel();
 
         int gap = 5;
@@ -70,6 +67,7 @@ public class TicTacToeFrame extends JFrame {
             for (int col = 0; col < 3; col++){
                 TicTacToeTile tile = new TicTacToeTile(row, col);
                 board[row][col] = tile;
+                tile.setFont(new Font("Arial", Font.BOLD, 50));
 
                 tile.addActionListener(e -> {
                     handleTileClick(tile.getRow(), tile.getCol());
@@ -94,8 +92,20 @@ public class TicTacToeFrame extends JFrame {
 
             if (gameEngine.isWin(player)){
                 titleLabel.setText("Congratulations! Player " +player+ " win!");
+                for(int i = 0; i < 3; i++){
+                    for(int j = 0; j < 3; j++){
+                        TicTacToeTile doneTile = board[i][j];
+                        doneTile.setEnabled(false);
+                    }
+                }
             } else if (gameEngine.isTie()) {
                 titleLabel.setText("It's a tie!");
+                for(int i = 0; i < 3; i++){
+                    for(int j = 0; j < 3; j++){
+                        TicTacToeTile doneTile = board[i][j];
+                        doneTile.setEnabled(false);
+                    }
+                }
             } else {
                 gameEngine.switchPlayer(player);
                 titleLabel.setText("Player " +player+ "'s turn!");
@@ -114,7 +124,18 @@ public class TicTacToeFrame extends JFrame {
         );
 
         if (resetConfirm == JOptionPane.YES_OPTION){
-            //reset code here
+            gameEngine.clearBoard();
+            titleLabel.setText("TicTacToe Game!");
+
+            for(int i = 0; i < 3; i++){
+                for(int j = 0; j < 3; j++){
+                    TicTacToeTile tile = board[i][j];
+
+                    tile.clearTile();
+
+                    tile.setEnabled(true);
+                }
+            }
         }else{}
     }
 

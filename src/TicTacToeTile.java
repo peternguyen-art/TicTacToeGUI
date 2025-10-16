@@ -44,6 +44,10 @@ public class TicTacToeTile extends JButton
         this.state = newState;
         setText(String.valueOf(newState));
     }
+
+    public void clearTile(){
+        setState(' ');
+    }
 }
 
 
