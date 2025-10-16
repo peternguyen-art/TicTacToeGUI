@@ -1,6 +1,3 @@
-
-import java.util.Scanner;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -13,84 +10,21 @@ import java.util.Scanner;
  */
 public class TicTacToe 
 {
+    private final int ROW = 3;
+    private final int COL = 3;
+    private String[][] board = new String[ROW][COL];
+    private String currentPlayer = "X";
+    private int moveCnt = 0;
+    private final int MOVES_FOR_WIN = 5;
+    private final int MOVES_FOR_TIE = 7;
 
-    private static final int ROW = 3;
-    private static final int COL = 3;
-    private static String[][] board = new String[ROW][COL];
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) 
+    public TicTacToe()
     {
-       boolean finished = false;
-       boolean playing = true;
-       Scanner in = new Scanner(System.in);
-       String player = "X";
-       int moveCnt = 0;
-       int row = -1;
-       int col = -1;
-       final int MOVES_FOR_WIN = 5;
-       final int MOVES_FOR_TIE = 7;
-       do // program loop
-       {
-           //begin a game
-           player = "X";
-           playing = true;
-           moveCnt = 0;
-           clearBoard();
-           do  // game loop
-           {
-              // get the move
-              do 
-              {
-                
-                display();  
-                System.out.println("Enter move for " + player);
-                row = SafeInput.getRangedInt(in,"Enter row ", 1, 3);
-                col = SafeInput.getRangedInt(in,"Enter col ", 1, 3);
-                row--; col--;  
-              }while(!isValidMove(row, col));
-              board[row][col] = player;
-              moveCnt++;
-              
-              if(moveCnt >= MOVES_FOR_WIN)
-              {
-                  if(isWin(player))
-                  {
-                      display();
-                      System.out.println("Player " + player + " wins!");
-                      playing = false;
-                  }
-              }
-              if(moveCnt >= MOVES_FOR_TIE)
-              {
-                  if(isTie())
-                  {
-                      display();
-                      System.out.println("It's a Tie!");
-                      playing = false;
-                  }
-              }
-              if(player.equals("X"))
-              {
-                  player = "O";
-              }
-              else
-              {
-                  player = "X";
-              }
-              
-           }while(playing);
-           
-           finished = SafeInput.getYNConfirm(in, "Done Playing? ");
-       }while(!finished);
-       
-        
+        clearBoard();
     }
+
     
-    private static void clearBoard()
+    private void clearBoard()
     {
        // sets all the board elements to a space
        for(int row=0; row < ROW; row++)
@@ -99,41 +33,68 @@ public class TicTacToe
            {
                board[row][col] = " ";
            }
-       }    
+       }
+       currentPlayer = "X";
+       moveCnt = 0;
     }
-    private static void display() 
-    {
-       // shows the Tic Tac Toe game 
-       for(int row=0; row < ROW; row++)
-       {
-           System.out.print("| ");
-           for(int col=0; col < COL; col++)
-           {
-               System.out.print(board[row][col] + " | ");
-           }
-           System.out.println();
-       }    
 
-    }
-    private static boolean isValidMove(int row, int col)
+    public String getCurrentPlayer()
     {
-        boolean retVal = false;
-       if(board[row][col].equals(" "))
-           retVal = true;
-       
-       return retVal;
-           
+        return currentPlayer;
     }
-    private static boolean isWin(String player)
+
+    public boolean makeMove(int row, int col)
     {
-        if(isColWin(player) || isRowWin(player) || isDiagnalWin(player))
+        if (isValidMove(row, col))
         {
+            board[row][col] = currentPlayer;
+            moveCnt++;
             return true;
         }
-        
         return false;
     }
-    private static boolean isColWin(String player)
+
+    public void switchPlayer(String player)
+    {
+        currentPlayer = (currentPlayer.equals("X")) ? "O" : "X";
+    }
+
+    public String getTileState(int row, int col)
+    {
+        return board[row][col];
+    }
+
+    private boolean isValidMove(int row, int col)
+    {
+        boolean retVal = false;
+        if(board[row][col].equals(" "))
+            retVal = true;
+
+        return retVal;
+
+    }
+
+//    private void display()
+//    {
+//       // shows the Tic Tac Toe game
+//       for(int row=0; row < ROW; row++)
+//       {
+//           System.out.print("| ");
+//           for(int col=0; col < COL; col++)
+//           {
+//               System.out.print(board[row][col] + " | ");
+//           }
+//           System.out.println();
+//       }
+//
+//    }
+
+    private boolean isWin(String player)
+    {
+        return isColWin(player) || isRowWin(player) || isDiagnalWin(player);
+    }
+
+    private boolean isColWin(String player)
     {
        // checks for a col win for specified player
         for(int col=0; col < COL; col++)
@@ -147,7 +108,7 @@ public class TicTacToe
         }
         return false; // no col win
     }
-    private static boolean isRowWin(String player)
+    private boolean isRowWin(String player)
     {
        // checks for a row win for the specified player
         for(int row=0; row < ROW; row++)
@@ -161,7 +122,7 @@ public class TicTacToe
         }
         return false; // no row win        
     }
-    private static boolean isDiagnalWin(String player)
+    private boolean isDiagnalWin(String player)
     {
        // checks for a diagonal win for the specified player
         
@@ -182,7 +143,7 @@ public class TicTacToe
     
     // checks for a tie before board is filled.
     // check for the win first to be efficient
-    private static boolean isTie()
+    private boolean isTie()
     {
         boolean xFlag = false;
         boolean oFlag = false;
